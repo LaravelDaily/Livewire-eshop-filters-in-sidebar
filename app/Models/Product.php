@@ -18,8 +18,11 @@ class Product extends Model
         'manufacturer_id',
     ];
 
-    protected $casts = [
-        'price' => 'decimal',
+    const PRICES = [
+        'Less than 50',
+        'From 50 to 100',
+        'From 100 to 500',
+        'More than 500',
     ];
 
     public function category(): BelongsTo
