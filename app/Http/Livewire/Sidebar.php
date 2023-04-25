@@ -11,6 +11,9 @@ use Illuminate\Database\Eloquent\Builder;
 
 class Sidebar extends Component
 {
+    public array $categories = [];
+    public array $manufacturers = [];
+
     public array $selected = [
         'prices'        => [],
         'categories'    => [],
@@ -30,24 +33,26 @@ class Sidebar extends Component
             $this->selected['manufacturers']
         );
 
-        $categories = Category::withCount(['products' => function (Builder $query) {
+        $this->categories = Category::withCount(['products' => function (Builder $query) {
             $query->withFilters(
                 $this->selected['prices'],
                 [],
                 $this->selected['manufacturers']
             );
         }])
-            ->get();
+            ->get()
+            ->toArray();
 
-        $manufacturers = Manufacturer::withCount(['products' => function (Builder $query) {
+        $this->manufacturers = Manufacturer::withCount(['products' => function (Builder $query) {
             $query->withFilters(
                 $this->selected['prices'],
                 $this->selected['categories'],
                 []
             );
         }])
-            ->get();
+            ->get()
+            ->toArray();
 
-        return view('livewire.sidebar', compact('prices', 'categories', 'manufacturers'));
+        return view('livewire.sidebar', compact('prices'));
     }
 }
